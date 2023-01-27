@@ -13,7 +13,7 @@ contract NiftyPixels is ERC721Enumerable, Ownable {
     // contract variables
     uint256 public tokenId;
     
-    uint256 private immutable i_mintPrice;
+    uint256 private immutable i_mintPrice  = 0;
     uint256 private immutable i_maxSupply = 10000;
     mapping (uint256 => bool) public isIdClaimed;
     mapping (uint256 => uint256) public idToColor;
@@ -38,7 +38,7 @@ contract NiftyPixels is ERC721Enumerable, Ownable {
         uint64 subscriptionId,
         bytes32 gasLane, // keyHash
         uint32 callbackGasLimit*/
-        uint256 mintPrice
+        //_mintuint256 mintPrice
         )  
         ERC721("Nifty Pixels", "NP") payable
         //VRFConsumerBaseV2(vrfCoordinatorV2)
@@ -48,7 +48,7 @@ contract NiftyPixels is ERC721Enumerable, Ownable {
             i_gasLane = gasLane;
             i_subscriptionId = subscriptionId;
             i_callbackGasLimit = callbackGasLimit;*/
-            i_mintPrice = mintPrice;
+           // i_mintPrice = mintPrice;
 
    }
    
