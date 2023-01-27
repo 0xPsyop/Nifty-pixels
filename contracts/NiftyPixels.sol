@@ -94,7 +94,7 @@ contract NiftyPixels is ERC721Enumerable, Ownable {
 
 
    // generate and create a HEX color using the random numbers
-   //
+   
 
    function pickColor(uint256 _tokenId) internal pure returns(string memory){
       //find out if this is really returning a hex value given a random input
