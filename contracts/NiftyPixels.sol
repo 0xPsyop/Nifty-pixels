@@ -122,7 +122,7 @@ contract NiftyPixels is ERC721Enumerable, Ownable {
               string(
                  abi.encodePacked(
                     '{"Id": "',
-                      _tokenId,
+                      Strings.toString(_tokenId),
                      '", "description": "Another random 1/10000 pixel in the nifty-pixels", "image": "data:image/svg+xml;base64,',
                      Base64.encode(bytes(finalSvg)),
                      '", "Color": "',
