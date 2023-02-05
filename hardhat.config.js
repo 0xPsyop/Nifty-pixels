@@ -1,6 +1,7 @@
 require("@nomicfoundation/hardhat-toolbox");
 require("@nomiclabs/hardhat-etherscan");
 require("dotenv").config({ path: ".env" });
+require ("hardhat-gas-reporter");
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -16,4 +17,10 @@ module.exports = {
       polygonMumbai: process.env.POLYGONSCAN_KEY,
     },
   },
+  gasReporter:{
+    enabled:true,
+    outputFile:"gasReport.txt",
+    noColors:true ,
+    coinmarketcap:`${process.env.COINMARKETCAP_API_KEY}`
+  }
 };
