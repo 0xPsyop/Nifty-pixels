@@ -8,15 +8,17 @@ import "@openzeppelin/contracts/utils/Base64.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 
+
 contract NiftyPixels is ERC721Enumerable, Ownable {
     
     // contract variables
-    uint256 public tokenId;
-    
     uint256 private immutable i_mintPrice  = 0;
     uint256 private immutable i_maxSupply = 10000;
+    uint256 public claimedNumTokens= 0 ;
+    
     mapping (uint256 => bool) public isIdClaimed;
-    mapping (uint256 => uint256) public idToColor;
+    mapping (uint256 => string) public idToColor;
+
 
     string partOne = '<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"> <rect width="100%" height="100%" fill="rgb(' ;
     string partThree =  ')"/></svg>';
@@ -30,9 +32,6 @@ contract NiftyPixels is ERC721Enumerable, Ownable {
     uint32 private constant NUM_WORDS = 1;
     */
 
-    //events 
-    event requestedRandomNums(uint256 requestId);
-  
    constructor(
        /* address vrfCoordinatorV2,
         uint64 subscriptionId,
@@ -62,10 +61,7 @@ contract NiftyPixels is ERC721Enumerable, Ownable {
     //Mint a random pixel 
    function mintPixel() public payable notSold {
       require(msg.value >= i_mintPrice, " You're just too poor lol");
-      /* needs to add the functionality smh call the VRF contract and get the random numbers to use as token id 
-       also figure out a way to call it mulitiple ways if the generated token id is already existing
-       figure out that is the minting process is breaking down if call the randomness
-      */
+      uint256 tokenId =  getRandomTokenId(claimedNumTokens);
       _safeMint(msg.sender, tokenId);
       isIdClaimed[tokenId] = true;
   
@@ -91,18 +87,36 @@ contract NiftyPixels is ERC721Enumerable, Ownable {
        tokenId = randomWords[0] % 10000;
         
     }*/
+  
+  //get a random tokenId
 
+  function getRandomTokenId(uint256 _claimedNumTokens) private returns(uint256){
+      uint256 num = random(string(
+                abi.encode(
+                    msg.sender,
+                    tx.gasprice,
+                    block.number,
+                    block.timestamp,
+                    block.difficulty,
+                    blockhash(block.number - 1),
+                    address(this),
+                    _claimedNumTokens
+                )
+            )) % 10000;
+
+      if(isIdClaimed[num]) {
+         getRandomTokenId(claimedNumTokens);
+      } else {
+          return num;
+      }
+     
+  }
 
    // generate and create a HEX color using the random numbers
-   
-
    function pickColor(uint256 _tokenId) internal pure returns(string memory){
-      //find out if this is really returning a hex value given a random input
       string memory codeRed =   Strings.toString(random(string(abi.encodePacked(_tokenId, "red"))) % 256);
       string memory codeGreen = Strings.toString(random(string(abi.encodePacked(_tokenId, "green"))) % 256);
       string memory  codeBlue =  Strings.toString(random(string(abi.encodePacked(_tokenId, "blue"))) % 256);
-      
-     
       return string(abi.encodePacked(codeRed,",",codeGreen,",",codeBlue));
    }
 
