@@ -20,10 +20,10 @@ async function main() {
   let txn  = await deployedNiftyContract.mintPixel();
   await txn.wait();
 
-  console.log("minted")
+  console.log("minted");
 
-  let uri  = await deployedNiftyContract.tokenURI(420);
-  console.log(uri);
+  //let uri  = await deployedNiftyContract.tokenURI();
+ // console.log(uri);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
