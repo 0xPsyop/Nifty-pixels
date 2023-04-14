@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: Unlicense
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.19;
 
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
@@ -8,9 +8,12 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
 
 contract NiftyPixels is ERC721Enumerable, Ownable {
+
+    //This is a nft contract that generates a random pixel with a random color and a random id from 0 to 10000 
+
     
     // contract variables
-    uint256 private immutable i_mintPrice = 0;
+    uint256 private immutable i_mintPrice;
     uint256 private immutable i_maxSupply = 10000;
     
     mapping (uint256 => bool) public isIdClaimed;
@@ -22,9 +25,9 @@ contract NiftyPixels is ERC721Enumerable, Ownable {
 
 
    constructor(
-    //uint256 mintPrice
+    uint256 mintPrice
     )ERC721("Nifty Pixels", "NP") payable {
-           //i_mintPrice = mintPrice;
+           i_mintPrice = mintPrice;
 
    }
    
@@ -47,14 +50,14 @@ contract NiftyPixels is ERC721Enumerable, Ownable {
   
   //get a random tokenId
 
-  function getRandomTokenId(uint256 _claimedNumTokens) private returns(uint256){
-      uint256 num = random(string(
+  function getRandomTokenId(uint256 _claimedNumTokens) private returns(uint256 num){
+      num = random(string(
                 abi.encode(
                     msg.sender,
                     tx.gasprice,
                     block.number,
                     block.timestamp,
-                    block.difficulty,
+                    block.prevrandao,
                     blockhash(block.number - 1),
                     address(this),
                     _claimedNumTokens
